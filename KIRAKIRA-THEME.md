@@ -24,7 +24,7 @@
 
 定制版 2.3.10 起恢复应用更新，仅检查 `RUI-JACK/kirakira` 的正式 GitHub Releases；Windows 优先使用本项目 EXE 安装包，Android 使用同包名、同签名的 ARM64 APK。设置中恢复应用更新开关，关于页提供检查更新和本仓库更新日志。没有 Release 时显示等待发布，绝不回退原版安装包。发布格式和下一版本步骤见 `UPDATE-CHANNEL.md`。
 
-弹幕 API 使用官方 AppId / AppSecret 签名。需要先在 https://dev.dandanplay.com/ 申请审核，将凭据填入源码目录之外的 `%LOCALAPPDATA%\kirakira-build\dandan-credentials.json`；字段名见 `tools/dandan-credentials.example.json`。打包脚本检查配置完整性，再通过 `--dart-define-from-file` 注入凭据；不输出密钥。审核未通过不会阻止界面更新包构建。可用 `-DartDefineFile` 指定其他本地配置路径，或单独运行 `tools/check-danmaku-access.ps1` 联网检查接口认证。配置完整不代表弹幕权限已开通。
+2.3.11 起支持自建 LogVar 多平台弹幕。默认构建助手从源码外的 `%LOCALAPPDATA%\kirakira-build\danmaku-credentials.json` 读取 `DANMAKU_API_BASE_URL`，不需要同时注入弹弹play密钥；服务端选择直接平台来源时不依赖弹弹play应用审核。配置示例、自动匹配和管理接口限制见 `DANMAKU-SERVICE.md`。未配置自建服务的构建仍保留官方 AppId / AppSecret 签名接口，需自行申请合法权限。可用 `-DartDefineFile` 指定其他本地配置，单独运行 `tools/check-danmaku-access.ps1` 联网检查服务，或加 `-ConfigurationOnly` 只检查配置完整性。
 
 沿用原项目 Flutter 3.47.7 环境；安装对应平台工具链后，在项目目录运行：
 
@@ -70,4 +70,4 @@ macOS、iOS 和 Linux 的应用名称与现有 GitHub 工作流产物名称也�
 
 Windows x64 正式版与 EXE 安装包已构建，已在本机完成安装及启动检查。Windows 安装包未签名，卸载入口已注册，未执行卸载检查。安卓 ARM64 正式 APK 已使用本地独立发行密钥签名，最低 Android 7.0；已在 Android 16 模拟器中安装同一个 ARM64 包，检查启动、明暗切换、重启后主题保存和搜索结果。未进行实体手机验证，也未完成播放、弹幕、投屏或下载的完整回归；弹幕审核状态独立于界面打包。
 
-安卓重建时设置 `JAVA_HOME`、`ANDROID_HOME` 并使用 Flutter 3.47.7，运行 `tools/package-android.ps1`。脚本从源码目录外的 `%LOCALAPPDATA%\kirakira-build\android-signing.json` 读取本地签名配置，私钥及密码不随源码分发。该签名密钥用于后续版本覆盖升级，应保留本机原文件。脚本仅检查弹幕配置完整性并注入凭据，官方审核是否生效仍需另行联网核实。
+安卓重建时设置 `JAVA_HOME`、`ANDROID_HOME` 并使用 Flutter 3.47.7，运行 `tools/package-android.ps1`。脚本从源码目录外的 `%LOCALAPPDATA%\kirakira-build\android-signing.json` 读取本地签名配置，私钥及密码不随源码分发。该签名密钥用于后续版本覆盖升级，应保留本机原文件。脚本检查弹幕配置完整性并注入构建；自建服务与官方权限分别验证。
