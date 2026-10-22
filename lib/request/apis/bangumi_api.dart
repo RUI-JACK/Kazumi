@@ -426,8 +426,9 @@ class BangumiApi {
         if (value is! Map<String, dynamic> || value['type'] != 2) continue;
         final names = ['${value['name_cn'] ?? ''}', '${value['name'] ?? ''}'];
         // The old endpoint may return unrelated fuzzy hits after its first hit.
-        if (!names.any((name) => _normalizedSearchTitle(name).contains(query)))
+        if (!names.any((name) => _normalizedSearchTitle(name).contains(query))) {
           continue;
+        }
         try {
           final rating = value['rating'];
           results.add(
