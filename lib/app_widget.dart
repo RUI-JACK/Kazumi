@@ -13,7 +13,6 @@ import 'package:kazumi/bean/dialog/dialog_helper.dart';
 import 'package:kazumi/bean/dialog/exit_confirmation_dialog.dart';
 import 'package:kazumi/bean/settings/theme_provider.dart';
 import 'package:kazumi/navigation.dart';
-import 'package:kazumi/utils/constants.dart';
 import 'package:kazumi/utils/device.dart';
 import 'package:kazumi/utils/theme.dart';
 
@@ -141,23 +140,20 @@ class _AppWidgetState extends State<AppWidget>
     Color? color,
     ColorScheme? colorScheme,
   }) {
-    return ThemeData(
-      useMaterial3: true,
+    return buildKazumiTheme(
       fontFamily: fontFamily,
       brightness: brightness,
-      colorSchemeSeed: color,
+      color: color,
       colorScheme: colorScheme,
-      progressIndicatorTheme: progressIndicatorTheme2024,
-      sliderTheme: sliderTheme2024,
-      pageTransitionsTheme: pageTransitionsTheme2024,
     );
   }
 
   void _syncWindowsTitleBarBrightness(ThemeProvider themeProvider) {
     if (!Platform.isWindows) return;
 
-    final brightness =
-        themeProvider.isEffectiveDark() ? Brightness.dark : Brightness.light;
+    final brightness = themeProvider.isEffectiveDark()
+        ? Brightness.dark
+        : Brightness.light;
     if (_lastTitleBarBrightness == brightness) return;
 
     _lastTitleBarBrightness = brightness;
@@ -205,13 +201,10 @@ class _AppWidgetState extends State<AppWidget>
 
         action = result.action;
         if (result.rememberChoice) {
-          await GStorage.putSetting(
-            SettingsKeys.exitBehavior,
-            switch (action) {
-              ExitDialogAction.exit => 0,
-              ExitDialogAction.minimizeToTray => 1,
-            },
-          );
+          await GStorage.putSetting(SettingsKeys.exitBehavior, switch (action) {
+            ExitDialogAction.exit => 0,
+            ExitDialogAction.minimizeToTray => 1,
+          });
         }
       }
 
@@ -231,11 +224,13 @@ class _AppWidgetState extends State<AppWidget>
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
-      KazumiLogger()
-          .i("AppLifecycleState.paused: Application moved to background");
+      KazumiLogger().i(
+        "AppLifecycleState.paused: Application moved to background",
+      );
     } else if (state == AppLifecycleState.resumed) {
-      KazumiLogger()
-          .i("AppLifecycleState.resumed: Application moved to foreground");
+      KazumiLogger().i(
+        "AppLifecycleState.resumed: Application moved to foreground",
+      );
       await MeteredNetworkService.refresh();
     } else if (state == AppLifecycleState.inactive) {
       KazumiLogger().i("AppLifecycleState.inactive: Application is inactive");
@@ -247,7 +242,8 @@ class _AppWidgetState extends State<AppWidget>
     super.didChangePlatformBrightness();
     final ThemeProvider themeProvider = context.read<ThemeProvider>();
     KazumiLogger().i(
-        "Platform brightness changed, themeMode: ${themeProvider.themeMode}");
+      "Platform brightness changed, themeMode: ${themeProvider.themeMode}",
+    );
 
     _syncWindowsTitleBarBrightness(themeProvider);
   }
@@ -263,14 +259,16 @@ class _AppWidgetState extends State<AppWidget>
     }
 
     if (!Platform.isLinux) {
-      await trayManager.setToolTip('Kazumi');
+      await trayManager.setToolTip('キラキラ');
     }
 
-    Menu trayMenu = Menu(items: [
-      MenuItem(key: 'show_window', label: '显示窗口'),
-      MenuItem.separator(),
-      MenuItem(key: 'exit', label: '退出 Kazumi')
-    ]);
+    Menu trayMenu = Menu(
+      items: [
+        MenuItem(key: 'show_window', label: '显示窗口'),
+        MenuItem.separator(),
+        MenuItem(key: 'exit', label: '退出 キラキラ'),
+      ],
+    );
     await trayManager.setContextMenu(trayMenu);
   }
 
@@ -302,14 +300,20 @@ class _AppWidgetState extends State<AppWidget>
             : dynamicDarkTheme;
 
         return MaterialApp.router(
-          title: "Kazumi",
+          title: "キラキラ",
           localizationsDelegates: GlobalMaterialLocalizations.delegates,
           supportedLocales: const [
             Locale.fromSubtags(
-                languageCode: 'zh', scriptCode: 'Hans', countryCode: "CN")
+              languageCode: 'zh',
+              scriptCode: 'Hans',
+              countryCode: "CN",
+            ),
           ],
           locale: const Locale.fromSubtags(
-              languageCode: 'zh', scriptCode: 'Hans', countryCode: "CN"),
+            languageCode: 'zh',
+            scriptCode: 'Hans',
+            countryCode: "CN",
+          ),
           theme: lightTheme,
           darkTheme: effectiveDarkTheme,
           themeMode: themeProvider.themeMode,

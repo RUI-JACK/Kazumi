@@ -8,6 +8,18 @@ import 'package:kazumi/bean/widget/empty_state_widget.dart';
 import 'package:kazumi/modules/download/download_module.dart';
 import 'package:kazumi/modules/roads/road_module.dart';
 
+final _sourceEpisodeNumber = RegExp(
+  r'^(?:第\s*|(?:EP(?:ISODE)?|#)\s*[.:-]?\s*)?(\d+(?:\.\d+)?|[零〇一二三四五六七八九十百千两]+)(?=\s|[集话話:：._-]|$)',
+  caseSensitive: false,
+);
+
+String _episodeNumberLabel(String title, int fallback, {int? cachedNumber}) {
+  final number = cachedNumber?.toString() ??
+      _sourceEpisodeNumber.firstMatch(title.trim())?.group(1) ??
+      fallback.toString();
+  return '第$number集';
+}
+
 class EpisodeSelectionPanel extends StatefulWidget {
   const EpisodeSelectionPanel({
     super.key,
@@ -213,6 +225,10 @@ class EpisodeSelectionPanelState extends State<EpisodeSelectionPanel> {
                       return _EpisodeRow(
                         key: ValueKey('$_visibleRoad:$episode'),
                         name: name,
+                        episodeLabel: _episodeNumberLabel(name, episode,
+                            cachedNumber: widget.isOffline
+                                ? int.tryParse(road.data[index])
+                                : null),
                         first: index == 0,
                         last: index == count - 1,
                         selected: _visibleRoad == widget.selectedRoad &&
@@ -512,6 +528,7 @@ class _EpisodeRow extends StatefulWidget {
   const _EpisodeRow({
     super.key,
     required this.name,
+    required this.episodeLabel,
     required this.first,
     required this.last,
     required this.selected,
@@ -523,6 +540,7 @@ class _EpisodeRow extends StatefulWidget {
   });
 
   final String name;
+  final String episodeLabel;
   final bool first;
   final bool last;
   final bool selected;
@@ -599,10 +617,10 @@ class _EpisodeRowState extends State<_EpisodeRow>
       onTap: widget.onTap,
       selected: widget.selected,
       inMutuallyExclusiveGroup: true,
-      label: '${widget.name}，$playbackLabel'
+      label: '${widget.episodeLabel}，${widget.name}，$playbackLabel'
           '${downloadLabel == null ? '' : '，$downloadLabel'}',
       child: Tooltip(
-        message: '${widget.name} · $playbackLabel'
+        message: '${widget.episodeLabel} · ${widget.name} · $playbackLabel'
             '${downloadLabel == null ? '' : ' · $downloadLabel'}',
         excludeFromSemantics: true,
         child: AnimatedBuilder(
@@ -655,6 +673,16 @@ class _EpisodeRowState extends State<_EpisodeRow>
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        widget.episodeLabel,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: widget.selected
+                              ? foreground
+                              : colors.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
                       Text(
                         widget.name,
                         maxLines: 2,

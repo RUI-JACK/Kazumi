@@ -215,7 +215,7 @@ class _InitPageState extends State<InitPage> {
             child: AlertDialog(
               title: const Text('X11环境检测'),
               content: const Text(
-                  '检测到您当前运行在X11环境下，Kazumi在X11环境下可能出现性能问题或界面异常，建议切换到Wayland以获得更好的体验。您是否希望在X11下继续使用Kazumi？'),
+                  '检测到您当前运行在X11环境下，キラキラ 在X11环境下可能出现性能问题或界面异常，建议切换到Wayland以获得更好的体验。您是否希望在X11下继续使用 キラキラ？'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -251,7 +251,7 @@ class _InitPageState extends State<InitPage> {
       clickMaskDismiss: false,
       builder: (context) => AlertDialog(
         title: const Text('创建桌面快捷方式'),
-        content: const Text('是否在桌面创建 Kazumi 的快捷方式？'),
+        content: const Text('是否在桌面创建 キラキラ 的快捷方式？'),
         actions: [
           TextButton(
             onPressed: () => KazumiDialog.dismiss(popWith: false),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:kazumi/request/config/api_endpoints.dart';
+import 'package:kazumi/request/config/bangumi_mirror_routes.dart';
 import 'package:kazumi/request/core/dio_factory.dart';
 import 'package:kazumi/request/core/network_error_mapper.dart';
 import 'package:kazumi/services/network/bangumi_acceleration.dart';
@@ -105,19 +106,11 @@ class BangumiClient {
 
   bool _shouldSignProtectedMirrorRequest(String url, String method) {
     final uri = Uri.parse(url);
-    if (BangumiAcceleration.current != BangumiAcceleration.mirror ||
+    if (!hasBangumiMirrorCredentials ||
+        BangumiAcceleration.current != BangumiAcceleration.mirror ||
         !ApiEndpoints.bangumiPublicApiHosts.contains(uri.host)) {
       return false;
     }
-    final path = uri.path;
-    if (method == 'POST' && path == '/v0/search/subjects') {
-      return true;
-    }
-    if (method != 'GET') {
-      return false;
-    }
-    return path.startsWith('/p1/subjects/') && path.endsWith('/comments') ||
-        path.startsWith('/p1/episodes/') && path.endsWith('/comments') ||
-        path.startsWith('/p1/characters/') && path.endsWith('/comments');
+    return isProtectedBangumiMirrorRoute(method, uri.path);
   }
 }

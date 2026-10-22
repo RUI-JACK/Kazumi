@@ -121,12 +121,12 @@ flutter_launcher_icons:
   android: true
   ios: true
   remove_alpha_ios: true
+  background_color_ios: "#102653"
   image_path: assets/images/logo/logo_android.png
   image_path_android: assets/images/logo/logo_android.png
   image_path_ios: assets/images/logo/logo_ios.png
-  adaptive_icon_background: "#ffffff"
+  adaptive_icon_background: "#102653"
   adaptive_icon_foreground: assets/images/logo/logo_android.png
-  adaptive_icon_monochrome: assets/images/logo/logo_android.png
   macos:
     generate: true
     image_path: assets/images/logo/logo_rounded.png
@@ -134,6 +134,11 @@ flutter_launcher_icons:
     generate: true
     image_path: assets/images/logo/logo_rounded.png
     icon_size: 256
+  web:
+    generate: true
+    image_path: assets/images/logo/logo_rounded.png
+    background_color: "#102653"
+    theme_color: "#596a45"
 
 flutter_native_splash:
   android: false
@@ -145,7 +150,8 @@ flutter_native_splash:
   image_dark_ios: assets/images/logo/logo_ios.png
 
 msix_config:
-  display_name: Kazumi
+  display_name: キラキラ
+  output_name: キラキラ
   publisher: CN=SignPath Foundation, O=SignPath Foundation, L=Lewes, S=Delaware, C=US
   logo_path: assets/images/logo/logo_rounded.png
   sign_msix: false
@@ -160,7 +166,11 @@ flutter:
     - assets/images/logo/
     - assets/statements/
     - licenses/ech_http/
+    - licenses/great_vibes/
   fonts:
     - family: MI_Sans_Regular
       fonts:
         - asset: assets/fonts/MiSans-Regular.ttf
+    - family: KirakiraScript
+      fonts:
+        - asset: assets/fonts/GreatVibes-Regular.ttf

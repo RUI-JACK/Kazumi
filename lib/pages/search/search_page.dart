@@ -311,10 +311,19 @@ class _SearchPageState extends State<SearchPage> {
       if (busy && allItems.isEmpty)
         const SliverToBoxAdapter(child: _SearchLoadingState())
       else if (allItems.isEmpty)
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: GeneralEmptyState(
             icon: Icons.search_off_rounded,
-            title: '没有找到番剧',
+            title: failed ? '搜索请求失败，请检查网络后重试' : '没有找到番剧',
+            actions: failed
+                ? [
+                    StateActionButton.tonal(
+                      onPressed: () => _submit(_submittedQuery!),
+                      icon: Icons.refresh_rounded,
+                      text: '重试',
+                    ),
+                  ]
+                : const [],
           ),
         )
       else if (items.isEmpty)

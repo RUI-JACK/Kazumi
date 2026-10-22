@@ -193,7 +193,7 @@ void FlutterWindow::RegisterShortcutChannel() {
       return;
     }
 
-    bool success = ShortcutUtils::CreateDesktopShortcut(L"Kazumi", L"Kazumi - Anime Player");
+    bool success = ShortcutUtils::CreateDesktopShortcut(L"\u30AD\u30E9\u30AD\u30E9", L"\u30AD\u30E9\u30AD\u30E9 - Anime Player");
     if (success) {
       result->Success(flutter::EncodableValue(true));
     } else {

@@ -264,9 +264,13 @@ class _BangumiInfoCardVState extends State<BangumiInfoCardV> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 120,
-                          height: 40,
+                        ConstrainedBox(
+                          // Keep the label's full line height when the theme
+                          // adds padding or the user enlarges system text
+                          constraints: const BoxConstraints(
+                            minWidth: 120,
+                            minHeight: 48,
+                          ),
                           child: CollectButton.extend(
                             bangumiItem: widget.bangumiItem,
                           ),

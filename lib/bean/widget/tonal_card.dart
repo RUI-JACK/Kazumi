@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const double tonalCardRadius = 24;
+const double tonalCardRadius = 20;
 
 class TonalCard extends StatelessWidget {
   const TonalCard({

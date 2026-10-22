@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kazumi/theme/little_prince_theme.dart';
 
 final List<Map<String, dynamic>> colorThemeTypes = [
-  {'color': Colors.green, 'label': '默认'},
+  {'color': littlePrinceSeedColor, 'label': '小王子 · 星光'},
   {'color': Colors.teal, 'label': '青色'},
   {'color': Colors.blue, 'label': '蓝色'},
   {'color': Colors.indigo, 'label': '靛蓝色'},

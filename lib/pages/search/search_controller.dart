@@ -100,6 +100,7 @@ abstract class _SearchPageController with Store {
       return;
     }
     var pagesFetched = 0;
+    var requestFailed = false;
     do {
       final page = await BangumiApi.bangumiSearch(filterState.keyword,
           tags: filterState.tags,
@@ -113,6 +114,7 @@ abstract class _SearchPageController with Store {
       // Discard stale responses before mutating the current search.
       if (generation != _searchGeneration) return;
       if (page == null) {
+        requestFailed = true;
         break;
       }
       pagesFetched++;
@@ -127,8 +129,7 @@ abstract class _SearchPageController with Store {
       }
     } while (hasMoreSearchResults && pagesFetched < _maxPagesPerSearch);
     isLoading = false;
-    isTimeOut =
-        bangumiList.isEmpty && (pagesFetched == 0 || !hasMoreSearchResults);
+    isTimeOut = requestFailed;
   }
 
   @action

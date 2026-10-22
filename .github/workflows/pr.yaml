@@ -146,14 +146,14 @@
               --dart-define=KAZUMI_KEY=$KAZUMI_KEY
             shell: bash
           - name: Package android build output
-            run: cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk Kazumi_android_canary.apk
+            run: cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk キラキラ_android_canary.apk
             shell: bash
 
           - name: Upload android outputs
             uses: actions/upload-artifact@v4
             with:
               name: android_outputs
-              path: Kazumi_android_*.apk
+              path: キラキラ_android_*.apk
 
       flutter-build-windows:
         needs: [flutter-test, flutter-analyze]
@@ -185,14 +185,14 @@
               --dart-define=DANDANAPI_KEY=$env:DANDANAPI_KEY
               --dart-define=KAZUMI_APPID=$env:KAZUMI_APPID
               --dart-define=KAZUMI_KEY=$env:KAZUMI_KEY
-          - run: Compress-Archive build/windows/x64/runner/Release/* Kazumi_windows_canary.zip
+          - run: Compress-Archive build/windows/x64/runner/Release/* キラキラ_windows_canary.zip
           - name: Upload windows outputs
             id: unsigned-windows-packet-artifacts
             uses: actions/upload-artifact@v4
             with:
               name: windows_outputs
               path: |
-                Kazumi_windows_*.zip
+                キラキラ_windows_*.zip
           # - name: Build unsigned msix
           #   run: dart run msix:create
           # - name: Upload windows msix ouputs
@@ -201,7 +201,7 @@
           #   with:
           #     name: windows_msix_outputs
           #     path: |
-          #       build/windows/x64/runner/Release/kazumi.msix
+          #       build/windows/x64/runner/Release/キラキラ.msix
           
           # - run: New-Item -Path "build/windows/msix_signed_output" -ItemType Directory
           # - name: sign windows msix
@@ -256,12 +256,12 @@
               mkdir Payload
               cp -R build/ios/iphoneos/Runner.app Payload/Runner.app
               find Payload/Runner.app/Frameworks -type d -name "*.framework" -exec codesign --force --sign - --preserve-metadata=identifier,entitlements {} \;
-              zip -q -r Kazumi_ios_canary_no_sign.ipa Payload
+              zip -q -r キラキラ_ios_canary_no_sign.ipa Payload
           - name: Upload iOS build
             uses: actions/upload-artifact@v4
             with:
               name: ios_outputs
-              path: Kazumi_ios_*.ipa
+              path: キラキラ_ios_*.ipa
 
       flutter-build-macos:
         needs: [flutter-test, flutter-analyze]
@@ -290,15 +290,15 @@
           - name: Create DMG
             run: |
               npm install --global create-dmg
-              create-dmg build/macos/Build/Products/Release/Kazumi.app
+              create-dmg build/macos/Build/Products/Release/キラキラ.app
             continue-on-error: true
           - name: Rename DMG
-            run: mv Kazumi*.dmg Kazumi_macos_canary.dmg
+            run: mv キラキラ*.dmg キラキラ_macos_canary.dmg
           - name: Upload MacOS build
             uses: actions/upload-artifact@v4
             with:
               name: macos_outputs
-              path: Kazumi_macos_*.dmg
+              path: キラキラ_macos_*.dmg
 
       flutter-build-linux-amd64:
         needs: [flutter-test, flutter-analyze]
@@ -355,22 +355,22 @@
           - name: Package linux amd64 build output
             run: |
               # Tarball package
-              tar -zcvf Kazumi_linux_canary_amd64.tar.gz -C build/linux/x64/release/bundle .
+              tar -zcvf キラキラ_linux_canary_amd64.tar.gz -C build/linux/x64/release/bundle .
 
               # Debian package
-              mkdir Kazumi_linux_canary_amd64
-              cd Kazumi_linux_canary_amd64
-              mkdir -p opt/Kazumi
+              mkdir キラキラ_linux_canary_amd64
+              cd キラキラ_linux_canary_amd64
+              mkdir -p opt/kirakira
               mkdir -p usr/share/applications
               mkdir -p usr/share/icons/hicolor/512x512/apps
-              cp -r ../build/linux/x64/release/bundle/* opt/Kazumi
+              cp -r ../build/linux/x64/release/bundle/* opt/kirakira
               cp -r ../assets/linux/DEBIAN .
               chmod 0755 DEBIAN/postinst
               chmod 0755 DEBIAN/postrm
 
               cat>DEBIAN/control<<EOF
               Maintainer: madoka773 <valigarmanda55@gmail.com>
-              Package: Kazumi
+              Package: kirakira
               Version: 0.0.1
               Section: x11
               Priority: optional
@@ -388,7 +388,7 @@
               cp ../assets/images/logo/logo_linux.png usr/share/icons/hicolor/512x512/apps/io.github.Predidit.Kazumi.png
 
               cd ..
-              dpkg-deb --build --root-owner-group Kazumi_linux_canary_amd64
+              dpkg-deb --build --root-owner-group キラキラ_linux_canary_amd64
             shell: bash
 
           - name: Upload linux amd64 outputs
@@ -396,8 +396,8 @@
             with:
               name: linux_amd64_outputs
               path: |
-                Kazumi_linux_*.tar.gz
-                Kazumi_linux_*.deb
+                キラキラ_linux_*.tar.gz
+                キラキラ_linux_*.deb
 
       flutter-build-linux-arm64:
         needs: [flutter-test, flutter-analyze]
@@ -409,7 +409,7 @@
           - name: Clone repository
             uses: actions/checkout@v4
           - name: Echo build progress
-            run: echo "Kazumi_linux_canary_arm64 build progress"
+            run: echo "キラキラ_linux_canary_arm64 build progress"
             shell: bash
           - name: Set up Flutter for ARM64
             uses: ./.github/actions/flutter-arm64-setup
@@ -436,22 +436,22 @@
           - name: Package linux arm64 build output
             run: |
               # Tarball package
-              tar -zcvf Kazumi_linux_canary_arm64.tar.gz -C build/linux/arm64/release/bundle .
+              tar -zcvf キラキラ_linux_canary_arm64.tar.gz -C build/linux/arm64/release/bundle .
 
               # Debian package
-              mkdir Kazumi_linux_canary_arm64
-              cd Kazumi_linux_canary_arm64
-              mkdir -p opt/Kazumi
+              mkdir キラキラ_linux_canary_arm64
+              cd キラキラ_linux_canary_arm64
+              mkdir -p opt/kirakira
               mkdir -p usr/share/applications
               mkdir -p usr/share/icons/hicolor/512x512/apps
-              cp -r ../build/linux/arm64/release/bundle/* opt/Kazumi
+              cp -r ../build/linux/arm64/release/bundle/* opt/kirakira
               cp -r ../assets/linux/DEBIAN .
               chmod 0755 DEBIAN/postinst
               chmod 0755 DEBIAN/postrm
 
               cat>DEBIAN/control<<EOF
               Maintainer: madoka773 <valigarmanda55@gmail.com>
-              Package: Kazumi
+              Package: kirakira
               Version: 0.0.1
               Section: x11
               Priority: optional
@@ -469,7 +469,7 @@
               cp ../assets/images/logo/logo_linux.png usr/share/icons/hicolor/512x512/apps/io.github.Predidit.Kazumi.png
 
               cd ..
-              dpkg-deb --build --root-owner-group Kazumi_linux_canary_arm64
+              dpkg-deb --build --root-owner-group キラキラ_linux_canary_arm64
             shell: bash
 
           - name: Upload linux arm64 outputs
@@ -477,5 +477,5 @@
             with:
               name: linux_arm64_outputs
               path: |
-                Kazumi_linux_*.tar.gz
-                Kazumi_linux_*.deb
+                キラキラ_linux_*.tar.gz
+                キラキラ_linux_*.deb

@@ -9,6 +9,7 @@ import 'package:kazumi/request/config/api_endpoints.dart';
 import 'package:kazumi/services/logging/logger.dart';
 import 'package:kazumi/services/update/update_download_source.dart';
 import 'package:kazumi/services/update/update_downloader.dart';
+import 'package:kazumi/services/update/update_channel.dart';
 import 'package:kazumi/services/storage/storage.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
@@ -126,6 +127,7 @@ class AutoUpdater {
   }
 
   Future<UpdateInfo?> checkForUpdates() async {
+    if (!UpdateChannel.applicationUpdatesEnabled) return null;
     try {
       final data = await _latestRelease();
 
@@ -168,6 +170,8 @@ class AutoUpdater {
   }
 
   Future<void> autoCheckForUpdates() async {
+    // Old installations may still have autoUpdate=true saved.
+    if (!UpdateChannel.applicationUpdatesEnabled) return;
     final autoUpdate = GStorage.getSetting(SettingsKeys.autoUpdate);
     if (!autoUpdate) return;
 
@@ -182,6 +186,10 @@ class AutoUpdater {
   }
 
   Future<void> manualCheckForUpdates() async {
+    if (!UpdateChannel.applicationUpdatesEnabled) {
+      KazumiDialog.showToast(message: UpdateChannel.notice);
+      return;
+    }
     try {
       final updateInfo = await checkForUpdates();
       if (updateInfo != null) {
@@ -216,6 +224,7 @@ class AutoUpdater {
   Future<void> _downloadUpdateWithType(
       UpdateInfo updateInfo, InstallationType selectedType,
       UpdateDownloadSource source) async {
+    if (!UpdateChannel.applicationUpdatesEnabled) return;
     try {
       if (!selectedType.downloadsInApp) {
         String releaseUrl = updateInfo.releaseNotes;
@@ -515,6 +524,6 @@ class AutoUpdater {
     } else if (Platform.isAndroid) {
       extension = '.apk';
     }
-    return 'Kazumi-$version$extension';
+    return 'キラキラ-$version$extension';
   }
 }

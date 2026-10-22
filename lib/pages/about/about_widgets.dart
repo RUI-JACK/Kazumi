@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:kazumi/bean/dialog/dialog_helper.dart';
 import 'package:kazumi/bean/widget/split_list_row.dart';
 import 'package:kazumi/bean/widget/state_presentation.dart';
+import 'package:kazumi/services/update/update_channel.dart';
 
 void _showMessage(BuildContext context, String message) {
   KazumiDialog.showToast(context: context, message: message);
@@ -150,7 +151,7 @@ class _CheckUpdateButtonState extends State<CheckUpdateButton> {
   @override
   Widget build(BuildContext context) => StateActionButton(
         onPressed: _checking ? null : _check,
-        text: _checking ? '正在检查…' : '检查更新',
+        text: _checking ? '正在检查…' : UpdateChannel.title,
         reserveText: '正在检查…',
         icon: Icons.update_rounded,
       );

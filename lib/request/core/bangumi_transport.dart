@@ -5,10 +5,12 @@ import 'package:dio/dio.dart';
 import 'package:ech_http/ech_http.dart';
 import 'package:http/http.dart' as http;
 import 'package:kazumi/request/config/api_endpoints.dart';
+import 'package:kazumi/request/config/bangumi_mirror_routes.dart';
 import 'package:kazumi/request/core/network_config.dart';
 import 'package:kazumi/services/logging/logger.dart';
 import 'package:kazumi/services/network/bangumi_acceleration.dart';
 import 'package:kazumi/services/network/bangumi_ech_resolver.dart';
+import 'package:kazumi/utils/bangumi_mirror_credentials.dart';
 
 const _echRequestKey = 'bangumiEch';
 
@@ -26,6 +28,13 @@ class BangumiAccelerationInterceptor extends Interceptor {
           options.queryParameters = {};
           options.extra[_echRequestKey] = true;
         case BangumiAcceleration.mirror:
+          // Custom builds do not inherit the upstream mirror credentials.
+          // Search and comments remain public on the official Bangumi API.
+          // Keep the mirror for routes that do not require application keys.
+          if (isProtectedBangumiMirrorRoute(options.method, uri.path) &&
+              !hasBangumiMirrorCredentials) {
+            break;
+          }
           options.path =
               ApiEndpoints.bangumiMirrorDomain +
               uri.path +

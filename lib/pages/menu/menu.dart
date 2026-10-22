@@ -174,16 +174,19 @@ class _ScaffoldMenu extends State<ScaffoldMenu> with RouteAware {
       bottomLeft: Radius.circular(16),
     );
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
       body: Row(
         children: [
           EmbeddedNativeControlArea(
             child: NavigationRail(
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              backgroundColor: Theme.of(
+                context,
+              ).colorScheme.surfaceContainerLow,
               groupAlignment: 1,
               leading: FloatingActionButton(
                 elevation: 0,
                 heroTag: null,
+                tooltip: '搜索',
                 onPressed: () => context.pushNamed('/search/'),
                 child: const Icon(Icons.search),
               ),

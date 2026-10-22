@@ -1,4 +1,20 @@
 # Miscellaneous
+dandan-credentials.json
+*.credentials.json
+android-signing.json
+**/key.properties
+**/*.jks
+**/*.keystore
+**/*.p12
+**/*.pfx
+.env
+.env.*
+!.env.example
+dist/
+.taste-skill/
+**/ephemeral/
+**/.gradle/
+**/.cxx/
 *.class
 *.log
 *.pyc

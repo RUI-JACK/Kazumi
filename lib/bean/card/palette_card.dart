@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kazumi/theme/little_prince_theme.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
 class PaletteCard extends StatefulWidget {
   final Color color;
   final bool selected;
 
-  const PaletteCard({
-    super.key,
-    required this.color,
-    required this.selected,
-  });
+  const PaletteCard({super.key, required this.color, required this.selected});
 
   @override
   State<StatefulWidget> createState() => _PaletteCardState();
@@ -19,10 +16,20 @@ class _PaletteCardState extends State<PaletteCard> {
   @override
   Widget build(BuildContext context) {
     final Hct hct = Hct.fromInt(widget.color.toARGB32());
-    final primary = Color(Hct.from(hct.hue, 20.0, 90.0).toInt());
-    final tertiary = Color(Hct.from(hct.hue + 50, 20.0, 85.0).toInt());
-    final primaryContainer = Color(Hct.from(hct.hue, 30.0, 50.0).toInt());
-    final checkbox = Color(Hct.from(hct.hue, 30.0, 40.0).toInt());
+    final prince = widget.color == littlePrinceSeedColor;
+    final palette = littlePrinceColorScheme(Brightness.light);
+    final primary = prince
+        ? palette.primaryContainer
+        : Color(Hct.from(hct.hue, 20.0, 90.0).toInt());
+    final tertiary = prince
+        ? palette.tertiaryContainer
+        : Color(Hct.from(hct.hue + 50, 20.0, 85.0).toInt());
+    final primaryContainer = prince
+        ? palette.secondaryContainer
+        : Color(Hct.from(hct.hue, 30.0, 50.0).toInt());
+    final checkbox = prince
+        ? palette.primary
+        : Color(Hct.from(hct.hue, 30.0, 40.0).toInt());
     return SizedBox(
       width: 70,
       height: 70,
@@ -36,25 +43,13 @@ class _PaletteCardState extends State<PaletteCard> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: Container(
-                        color: primary,
-                      ),
-                    ),
+                    Expanded(child: Container(color: primary)),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: Container(
-                              color: tertiary,
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              color: primaryContainer,
-                            ),
-                          ),
+                          Expanded(child: Container(color: tertiary)),
+                          Expanded(child: Container(color: primaryContainer)),
                         ],
                       ),
                     ),

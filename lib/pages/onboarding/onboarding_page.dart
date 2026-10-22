@@ -31,7 +31,7 @@ class OnboardingPage extends StatefulWidget {
 
 enum _OnboardingStep {
   welcome('使用约定'),
-  updates('更新来源'),
+  updates('应用更新'),
   mirrors('访问加速'),
   rules('添加规则');
 
@@ -51,16 +51,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
   int _currentIndex = 0;
   bool _agreed = false;
   bool _busy = false;
-  late bool _useGithubUpdate;
 
   PluginsController get _pluginsController => widget.pluginsController;
   bool get _isLastStep => _currentIndex == _steps.length - 1;
-
-  @override
-  void initState() {
-    super.initState();
-    _useGithubUpdate = GStorage.getSetting(SettingsKeys.autoUpdate);
-  }
 
   @override
   void dispose() {
@@ -70,13 +63,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget _buildStep(_OnboardingStep step) => switch (step) {
         _OnboardingStep.welcome => const DisclaimerStep(),
-        _OnboardingStep.updates => UpdateSourceStep(
-            useGithubUpdate: _useGithubUpdate,
-            onChanged: (value) {
-              setState(() => _useGithubUpdate = value);
-              unawaited(GStorage.putSetting(SettingsKeys.autoUpdate, value));
-            },
-          ),
+        _OnboardingStep.updates => const UpdateSourceStep(),
         _OnboardingStep.mirrors => const MirrorSettingsStep(),
         _OnboardingStep.rules => PluginShopStep(controller: _pluginsController),
       };

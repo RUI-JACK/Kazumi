@@ -60,7 +60,7 @@ class SettingsKeys {
   );
   static const autoUpdate = SettingKey<bool>(
     _SettingBoxKey.autoUpdate,
-    true,
+    false,
     group: SettingGroup.update,
   );
   static const checkPluginUpdateOnStartup = SettingKey<bool>(
