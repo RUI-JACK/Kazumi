@@ -6,6 +6,7 @@ import 'package:kazumi/bean/widget/state_presentation.dart';
 import 'package:kazumi/bean/widget/tonal_card.dart';
 import 'package:kazumi/services/update/auto_updater.dart';
 import 'package:kazumi/services/update/update_download_source.dart';
+import 'package:kazumi/services/update/update_channel.dart';
 import 'package:kazumi/utils/date_time.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,7 +34,7 @@ class UpdateAvailableDialog extends StatefulWidget {
 
 class _UpdateAvailableDialogState extends State<UpdateAvailableDialog> {
   final _notesController = ScrollController();
-  var _source = UpdateDownloadSource.mirror;
+  static const _source = UpdateDownloadSource.github;
   late var _type = widget.updateInfo.recommendedInstallationType;
   var _disableAutoUpdate = false;
 
@@ -149,8 +150,10 @@ class _UpdateAvailableDialogState extends State<UpdateAvailableDialog> {
                 runSpacing: 4,
                 children: [
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: colors.secondaryContainer,
                       borderRadius: BorderRadius.circular(8),
@@ -195,8 +198,10 @@ class _UpdateAvailableDialogState extends State<UpdateAvailableDialog> {
 
   Widget _buildReleaseNotes(BuildContext context) {
     final theme = Theme.of(context);
-    final maxHeight =
-        (MediaQuery.sizeOf(context).height * 0.22).clamp(96.0, 180.0);
+    final maxHeight = (MediaQuery.sizeOf(context).height * 0.22).clamp(
+      96.0,
+      180.0,
+    );
 
     return TonalCard(
       padding: const EdgeInsets.fromLTRB(16, 12, 4, 12),
@@ -224,15 +229,10 @@ class _UpdateAvailableDialogState extends State<UpdateAvailableDialog> {
     return SettingsSection(
       margin: EdgeInsets.zero,
       tiles: [
-        SettingsDropdownTile<UpdateDownloadSource>(
+        const SettingsTile(
           leading: Icons.cloud_download_rounded,
-          title: const Text('下载源'),
-          value: _source,
-          options: {
-            for (final source in UpdateDownloadSource.values)
-              source: source.label,
-          },
-          onChanged: (source) => setState(() => _source = source),
+          title: Text('下载源'),
+          description: Text('GitHub · ${UpdateChannel.repository}'),
         ),
         if (types.length > 1)
           SettingsDropdownTile<InstallationType>(

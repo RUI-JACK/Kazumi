@@ -13,37 +13,44 @@ class UpdateSettingsPage extends StatefulWidget {
 }
 
 class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
-  bool _pluginUpdate =
-      GStorage.getSetting(SettingsKeys.checkPluginUpdateOnStartup);
+  bool _appUpdate = GStorage.getSetting(SettingsKeys.autoUpdate);
+  bool _pluginUpdate = GStorage.getSetting(
+    SettingsKeys.checkPluginUpdateOnStartup,
+  );
 
   @override
   Widget build(BuildContext context) => SettingsDetailScaffold(
-        title: const Text('更新设置'),
-        body: SettingsList(
-          sections: [
-            SettingsSection(
-              title: const Text('启动时检查更新'),
-              tiles: [
-                const SettingsTile(
-                  leading: Icons.update_rounded,
-                  title: Text(UpdateChannel.title),
-                  description: Text(UpdateChannel.notice),
-                ),
-                SettingsTile.switchTile(
-                  leading: Icons.extension_rounded,
-                  title: const Text('规则更新'),
-                  initialValue: _pluginUpdate,
-                  onToggle: (value) {
-                    setState(() => _pluginUpdate = value ?? !_pluginUpdate);
-                    GStorage.putSetting(
-                      SettingsKeys.checkPluginUpdateOnStartup,
-                      _pluginUpdate,
-                    );
-                  },
-                ),
-              ],
+    title: const Text('更新设置'),
+    body: SettingsList(
+      sections: [
+        SettingsSection(
+          title: const Text('启动时检查更新'),
+          tiles: [
+            SettingsTile.switchTile(
+              leading: Icons.update_rounded,
+              title: const Text('应用更新'),
+              description: const Text(UpdateChannel.notice),
+              initialValue: _appUpdate,
+              onToggle: (value) {
+                setState(() => _appUpdate = value ?? !_appUpdate);
+                GStorage.putSetting(SettingsKeys.autoUpdate, _appUpdate);
+              },
+            ),
+            SettingsTile.switchTile(
+              leading: Icons.extension_rounded,
+              title: const Text('规则更新'),
+              initialValue: _pluginUpdate,
+              onToggle: (value) {
+                setState(() => _pluginUpdate = value ?? !_pluginUpdate);
+                GStorage.putSetting(
+                  SettingsKeys.checkPluginUpdateOnStartup,
+                  _pluginUpdate,
+                );
+              },
             ),
           ],
         ),
-      );
+      ],
+    ),
+  );
 }

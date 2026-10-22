@@ -10,7 +10,7 @@ $ErrorActionPreference = 'Stop'
 $displayName = -join (0x30AD,0x30E9,0x30AD,0x30E9 | ForEach-Object { [char]$_ })
 $projectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $projectRoot
-& (Join-Path $PSScriptRoot 'check-danmaku-access.ps1') -DartDefineFile $DartDefineFile
+& (Join-Path $PSScriptRoot 'check-danmaku-access.ps1') -DartDefineFile $DartDefineFile -ConfigurationOnly
 $DartDefineFile = (Resolve-Path -LiteralPath $DartDefineFile).Path
 $buildDefines = @("--dart-define-from-file=$DartDefineFile")
 $flutterCommand = Get-Command flutter -ErrorAction Stop

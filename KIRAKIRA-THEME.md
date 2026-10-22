@@ -22,7 +22,9 @@
 
 ## 打包
 
-弹幕 API 使用官方 AppId / AppSecret 签名。需要先在 https://dev.dandanplay.com/ 申请审核，将凭据填入源码目录之外的 `%LOCALAPPDATA%\kirakira-build\dandan-credentials.json`；字段名见 `tools/dandan-credentials.example.json`。打包脚本会先检查配置与官方 API，再通过 `--dart-define-from-file` 注入凭据；不输出密钥。可用 `-DartDefineFile` 指定其他本地配置路径。尚未获得凭据时，原有安装包的弹幕认证问题仍然存在。
+定制版 2.3.10 起恢复应用更新，仅检查 `RUI-JACK/kirakira` 的正式 GitHub Releases；Windows 优先使用本项目 EXE 安装包，Android 使用同包名、同签名的 ARM64 APK。设置中恢复应用更新开关，关于页提供检查更新和本仓库更新日志。没有 Release 时显示等待发布，绝不回退原版安装包。发布格式和下一版本步骤见 `UPDATE-CHANNEL.md`。
+
+弹幕 API 使用官方 AppId / AppSecret 签名。需要先在 https://dev.dandanplay.com/ 申请审核，将凭据填入源码目录之外的 `%LOCALAPPDATA%\kirakira-build\dandan-credentials.json`；字段名见 `tools/dandan-credentials.example.json`。打包脚本检查配置完整性，再通过 `--dart-define-from-file` 注入凭据；不输出密钥。审核未通过不会阻止界面更新包构建。可用 `-DartDefineFile` 指定其他本地配置路径，或单独运行 `tools/check-danmaku-access.ps1` 联网检查接口认证。配置完整不代表弹幕权限已开通。
 
 沿用原项目 Flutter 3.47.7 环境；安装对应平台工具链后，在项目目录运行：
 

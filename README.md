@@ -2,7 +2,7 @@
 
 基于 [Predidit/Kazumi](https://github.com/Predidit/Kazumi) 的个人定制版本，使用 Flutter 开发。本仓库保留上游历史与 GPL-3.0 许可证；定制内容包括小王子主题、明暗模式、品牌图标，以及搜索、评论和更新通道修复。
 
-当前定制版本为 **2.3.9**。本项目独立于 Kazumi 上游，也不是弹弹play官方客户端。
+当前定制版本为 **2.3.10**。本项目独立于 Kazumi 上游，也不是弹弹play官方客户端。
 
 ![キラキラ Windows 首页](docs/screenshots/windows-home.jpg)
 
@@ -13,7 +13,7 @@
 - 应用显示名称为「キラキラ」，首页品牌为 `kirakira`。
 - Windows 与 Android 共用主题和界面代码；播放器选集条目单独显示集数，保留原标题。
 - 缺少 Kazumi 镜像应用凭据时，搜索和评论使用 Bangumi 官方公开接口。
-- 关闭指向原版 Kazumi 安装包的应用更新入口，保留独立的播放源规则更新与兼容性校验。
+- 应用更新只检查本仓库的 GitHub Releases，支持 Windows EXE / ZIP 和 Android ARM64 APK；保留独立的播放源规则更新与兼容性校验。
 
 更多改动见 [主题与构建说明](KIRAKIRA-THEME.md)、[更新通道说明](UPDATE-CHANNEL.md) 和 [评论、弹幕接口说明](COMMENTS-DANMAKU.md)。
 
@@ -59,7 +59,11 @@ Windows 安装包使用 [tools/package-windows.ps1](tools/package-windows.ps1) �
 
 Android 定制包的应用 ID 为 `com.predidit.kazumi.kirakira`。发行构建须配置自己的签名文件；[tools/package-android.ps1](tools/package-android.ps1) 从仓库外读取签名配置。未配置私有签名的直接构建仅适合开发测试，不能覆盖使用其他密钥签名的安装包。
 
-仓库保留的上游 CI 工作流需要维护者自行配置凭据和签名服务；上传源码不代表已配置或验证自动发布。本仓库暂未发布定制二进制 Release，请勿将原版 Kazumi 的安装包视作定制版更新。
+软件只检查 [本仓库 Releases](https://github.com/RUI-JACK/kirakira/releases) 的正式版本，并验证定制文件名、仓库下载地址及 GitHub 提供的 SHA256 摘要。设置 → 更新设置可开启或关闭启动检查；关于 → 检查更新可随时手动检查。旧设置中的开关选择会保留。
+
+**推送源码不等于发布软件更新。** 发布新版本需要在 Releases 创建更高版本的标签（例如 `v2.3.11`），上传该版本的定制安装包。发布步骤、文件名和安卓签名要求见 [UPDATE-CHANNEL.md](UPDATE-CHANNEL.md)。仓库没有正式 Release 时，软件会提示等待发布，不会退回 Kazumi 原版通道。
+
+仓库保留的上游 CI 工作流需要维护者自行配置凭据和签名服务；当前没有为本仓库配置自动发布。不要将原版 Kazumi 安装包作为本定制版更新。
 
 ## 验证范围
 

@@ -29,6 +29,11 @@ class AboutPage extends StatelessWidget {
                     url: ApiEndpoints.sourceUrl,
                   ),
                   AboutLinkTile(
+                    icon: Icons.call_split_rounded,
+                    title: '上游 Kazumi',
+                    url: ApiEndpoints.upstreamSourceUrl,
+                  ),
+                  AboutLinkTile(
                     icon: Icons.language_rounded,
                     title: '项目主页',
                     url: ApiEndpoints.projectUrl,
@@ -139,7 +144,7 @@ class _ProjectHeader extends StatelessWidget {
                   context,
                   '${ApiEndpoints.sourceUrl}/releases',
                 ),
-                child: const Text('原项目更新日志'),
+                child: const Text('更新日志'),
               ),
             ],
           ),

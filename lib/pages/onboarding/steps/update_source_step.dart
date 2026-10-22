@@ -7,14 +7,14 @@ class UpdateSourceStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const OnboardingStepLayout(
-        leading: OnboardingStepIcon(
-          icon: Icons.system_update_rounded,
-          shape: OnboardingIconShape.cookie,
-        ),
-        title: UpdateChannel.title,
-        subtitle: UpdateChannel.notice,
-        child: OnboardingHint(
-          text: '播放源更新只更新规则。软件新版本请安装对应的定制包，以保留小王子主题和界面改动。',
-        ),
-      );
+    leading: OnboardingStepIcon(
+      icon: Icons.system_update_rounded,
+      shape: OnboardingIconShape.cookie,
+    ),
+    title: UpdateChannel.title,
+    subtitle: UpdateChannel.notice,
+    child: OnboardingHint(
+      text: '软件更新来自自己的 GitHub Releases；播放源更新只更新规则，不会安装原版 Kazumi。',
+    ),
+  );
 }
