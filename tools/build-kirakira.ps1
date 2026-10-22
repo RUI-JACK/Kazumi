@@ -3,7 +3,7 @@ param(
     [string]$Platform = 'windows',
     [switch]$Msix,
     [switch]$Installer,
-    [string]$DartDefineFile = (Join-Path $env:LOCALAPPDATA 'kirakira-build\dandan-credentials.json')
+    [string]$DartDefineFile = (Join-Path $env:LOCALAPPDATA 'kirakira-build\danmaku-credentials.json')
 )
 
 $ErrorActionPreference = 'Stop'

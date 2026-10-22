@@ -1,5 +1,5 @@
 param(
-    [string]$DartDefineFile = (Join-Path $env:LOCALAPPDATA 'kirakira-build\dandan-credentials.json'),
+    [string]$DartDefineFile = (Join-Path $env:LOCALAPPDATA 'kirakira-build\danmaku-credentials.json'),
     [string]$SigningFile = (Join-Path $env:LOCALAPPDATA 'kirakira-build\android-signing.json'),
     [switch]$IncludeEmulator
 )
@@ -36,4 +36,4 @@ foreach ($abi in @('arm64-v8a','x86_64')) {
     Copy-Item -LiteralPath $apk -Destination $destination -Force
     Get-FileHash -LiteralPath $destination -Algorithm SHA256
 }
-Write-Host 'Danmaku credentials were injected; live approval is a separate check.'
+Write-Host 'Private danmaku configuration was injected; credential values were not logged.'
