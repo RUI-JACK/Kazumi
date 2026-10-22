@@ -7,3 +7,7 @@ bool isProtectedBangumiMirrorRoute(String method, String path) {
       path.startsWith('/p1/episodes/') && path.endsWith('/comments') ||
       path.startsWith('/p1/characters/') && path.endsWith('/comments');
 }
+
+/// This official compatibility endpoint has no equivalent on the mirror.
+bool isPublicBangumiCompatibilityRoute(String method, String path) =>
+    method == 'GET' && path.startsWith('/search/subject/');

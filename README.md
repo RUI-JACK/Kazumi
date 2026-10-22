@@ -2,7 +2,7 @@
 
 基于 [Predidit/Kazumi](https://github.com/Predidit/Kazumi) 的个人定制版本，使用 Flutter 开发。本仓库保留上游历史与 GPL-3.0 许可证；定制内容包括小王子主题、明暗模式、品牌图标，以及搜索、评论和更新通道修复。
 
-当前定制版本为 **2.3.11**。本项目独立于 Kazumi 上游，也不是弹弹play官方客户端。
+当前定制版本为 **2.3.12**。本项目独立于 Kazumi 上游，也不是弹弹play官方客户端。
 
 ![キラキラ Windows 首页](docs/screenshots/windows-home.jpg)
 
@@ -13,6 +13,7 @@
 - 应用显示名称为「キラキラ」，首页品牌为 `kirakira`。
 - Windows 与 Android 共用主题和界面代码；播放器选集条目单独显示集数，保留原标题。
 - 缺少 Kazumi 镜像应用凭据时，搜索和评论使用 Bangumi 官方公开接口。
+- 普通关键词搜索补充官方兼容接口中遗漏的同名条目，按ID去重；精确标题优先，相关衍生作品不抢占已有结果。高级筛选和后续分页保留原有行为。
 - 应用更新只检查本仓库的 GitHub Releases，支持 Windows EXE / ZIP 和 Android ARM64 APK；保留独立的播放源规则更新与兼容性校验。
 
 更多改动见 [主题与构建说明](KIRAKIRA-THEME.md)、[更新通道说明](UPDATE-CHANNEL.md) 和 [评论、弹幕接口说明](COMMENTS-DANMAKU.md)。

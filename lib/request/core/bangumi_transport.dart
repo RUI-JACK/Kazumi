@@ -31,8 +31,9 @@ class BangumiAccelerationInterceptor extends Interceptor {
           // Custom builds do not inherit the upstream mirror credentials.
           // Search and comments remain public on the official Bangumi API.
           // Keep the mirror for routes that do not require application keys.
-          if (isProtectedBangumiMirrorRoute(options.method, uri.path) &&
-              !hasBangumiMirrorCredentials) {
+          if (isPublicBangumiCompatibilityRoute(options.method, uri.path) ||
+              (isProtectedBangumiMirrorRoute(options.method, uri.path) &&
+                  !hasBangumiMirrorCredentials)) {
             break;
           }
           options.path =

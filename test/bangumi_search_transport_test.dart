@@ -16,6 +16,7 @@ import 'package:kazumi/request/core/dio_factory.dart';
 import 'package:kazumi/request/core/network_exception.dart';
 import 'package:kazumi/services/storage/storage.dart';
 import 'package:kazumi/utils/bangumi_mirror_credentials.dart';
+import 'package:kazumi/utils/search_parser.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
@@ -205,6 +206,104 @@ void main() {
   );
 
   test(
+    'compatibility search restores an omitted exact title without unrelated hits',
+    () async {
+      adapter.respond = (r) async => r.method == 'GET'
+          ? _json({
+              'results': 2,
+              'list': [
+                _legacyItem(),
+                {
+                  ..._legacyItem(),
+                  'id': 9,
+                  'name': 'Unrelated',
+                  'name_cn': '无关条目',
+                },
+              ],
+            })
+          : _json({'data': []});
+      final controller = SearchPageController(
+        CollectRepository(),
+        SearchHistoryRepository(),
+      );
+      await controller.searchBangumi('后宫露营', type: 'init');
+      expect(controller.isTimeOut, isFalse);
+      expect(controller.bangumiList.single.id, 395537);
+      expect(controller.bangumiList.single.nameCn, '后宫露营！');
+      expect(controller.bangumiList.single.airDate, '2022-10-02');
+      expect(controller.bangumiList.single.rank, 9812);
+      expect(controller.hasMoreSearchResults, isFalse);
+      final legacy = adapter.requests.singleWhere((r) => r.method == 'GET');
+      expect(legacy.uri.host, 'api.bgm.tv');
+      expect(legacy.uri.pathSegments.last, '后宫露营');
+      expect(legacy.headers.containsKey('X-Signature'), isFalse);
+      expect(legacy.uri.queryParameters['responseGroup'], 'large');
+    },
+  );
+
+  test('supplements deduplicate by ID and retain primary pagination', () async {
+    adapter.respond = (r) async => r.method == 'GET'
+        ? _json({
+            'list': [_legacyItem(), _legacyItem()],
+          })
+        : _json({'data': List.generate(20, (i) => _item(i + 1))});
+    final page = await BangumiApi.bangumiSearch('后宫露营');
+    expect(page!.rawCount, 20);
+    expect(page.items, hasLength(21));
+    expect(page.items.first.id, 395537);
+    adapter.requests.clear();
+    await BangumiApi.bangumiSearch('后宫露营', offset: 20);
+    expect(adapter.requests, hasLength(1));
+    expect(adapter.requests.single.method, 'POST');
+    adapter.respond = (r) async => r.method == 'GET'
+        ? _json({
+            'list': [_legacyItem()],
+          })
+        : _json({
+            'data': [
+              {..._item(395537), 'name_cn': '后宫露营！'},
+            ],
+          });
+    final duplicate = await BangumiApi.bangumiSearch('后宫露营');
+    expect(duplicate!.items, hasLength(1));
+    expect(duplicate.items.single.rank, 1);
+    adapter.respond = (r) async => r.method == 'GET'
+        ? _json({
+            'list': [
+              {..._legacyItem(), 'id': 7, 'name_cn': '后宫露营同人动画'},
+            ],
+          })
+        : _json({
+            'data': [
+              {..._item(395537), 'name_cn': '后宫露营！'},
+            ],
+          });
+    final related = await BangumiApi.bangumiSearch('后宫露营');
+    expect(related!.items.map((item) => item.id), [395537, 7]);
+  });
+
+  test(
+    'compatibility failure preserves primary results and advanced filters remain strict',
+    () async {
+      adapter.respond = (r) async =>
+          r.method == 'GET' ? _json({}, status: 503) : _results();
+      final page = await BangumiApi.bangumiSearch('frieren');
+      expect(page!.items.single.id, 400602);
+      for (final params in ['tags', 'sort', 'rank']) {
+        adapter.requests.clear();
+        await BangumiApi.bangumiSearch(
+          'frieren',
+          tags: params == 'tags' ? ['漫画改'] : const [],
+          sort: params == 'sort' ? 'score' : 'heat',
+          rankRange: params == 'rank' ? const SearchIntRange(min: 1) : null,
+        );
+        expect(adapter.requests, hasLength(1));
+        expect(adapter.requests.single.method, 'POST');
+      }
+    },
+  );
+
+  test(
     'direct and ECH search retain chosen transport and never send mirror keys',
     () async {
       for (final mode in ['direct', 'ech']) {
@@ -305,9 +404,9 @@ void main() {
 
   test(
     'LIVE: production controller returns real titles in default mirror mode',
-    () async {
+    () => HttpOverrides.runWithHttpOverrides(() async {
       DioFactory.reset(); // Real configured adapter, interceptor and JSON parser.
-      for (final keyword in ['葬送的芙莉莲', '孤独摇滚', '学生会也有洞']) {
+      for (final keyword in ['后宫露营', '葬送的芙莉莲', '孤独摇滚', '学生会也有洞']) {
         final controller = SearchPageController(
           CollectRepository(),
           SearchHistoryRepository(),
@@ -316,6 +415,15 @@ void main() {
         expect(controller.isLoading, isFalse);
         expect(controller.isTimeOut, isFalse, reason: keyword);
         expect(controller.bangumiList, isNotEmpty, reason: keyword);
+        if (keyword == '后宫露营') {
+          expect(controller.bangumiList.first.id, 395537);
+          expect(controller.bangumiList.first.airDate, '2022-10-02');
+          final details = await BangumiApi.getBangumiInfoByID(395537);
+          expect(details?.id, 395537);
+        }
+        if (keyword == '葬送的芙莉莲') {
+          expect(controller.bangumiList.first.id, 400602);
+        }
         // Only public result names/counts; never log request headers or tokens.
         // ignore: avoid_print
         print(
@@ -323,11 +431,21 @@ void main() {
           '${controller.bangumiList.first.nameCn}',
         );
       }
-    },
+    }, _LiveHttp()),
     skip: !const bool.fromEnvironment('RUN_LIVE_SEARCH'),
     timeout: const Timeout(Duration(minutes: 2)),
   );
 }
+
+Map<String, dynamic> _legacyItem() => {
+  ..._item(395537),
+  'type': 2,
+  'name': 'ハーレムきゃんぷっ！',
+  'name_cn': '后宫露营！',
+  'air_date': '2022-10-02',
+  'rank': 9812,
+  'rating': {'score': 5.2, 'total': 1000},
+};
 
 Map<String, dynamic> _item(int id) => {
   'id': id,
