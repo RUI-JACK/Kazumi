@@ -71,7 +71,7 @@ Android 定制包的应用 ID 为 `com.predidit.kazumi.kirakira`。发行构建�
 
 ## 反馈与隐私
 
-本定制版问题请提交到 [本仓库 Issues](https://github.com/RUI-JACK/Kazumi/issues)。反馈时请删除日志中的账户信息、密钥及带签名的播放地址。
+本定制版问题请提交到 [本仓库 Issues](https://github.com/RUI-JACK/kirakira/issues)。反馈时请删除日志中的账户信息、密钥及带签名的播放地址。
 
 联网功能会按实际使用请求 Bangumi、弹弹play及用户所选的播放源。不要将自己的本地配置、缓存、观看记录或签名文件上传到公开仓库。
 
